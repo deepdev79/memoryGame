@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import Lottie from "lottie-react";
+import Bulbasaur from "../public/Bulbasaur.json";
 import "./App.css";
 
 interface FetchPokemon {
@@ -10,6 +12,7 @@ function App() {
   const [pokemons, setPokemons] = useState<FetchPokemon[]>([]);
   const [score, setScore] = useState(0);
   const [prevClick, setPrevClick] = useState<number[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const bestScore = useRef(0);
 
   useEffect(function () {
@@ -28,6 +31,7 @@ function App() {
       });
       const result = await Promise.all(fetchPromises);
       setPokemons(result);
+      setIsLoading(false);
     }
     getPokemon();
   }, []);
@@ -64,7 +68,18 @@ function App() {
       <h1>Memory Game</h1>
       <p>Score: {score}</p>
       <p>Best score: {bestScore.current}</p>
-      <Pokemons mons={pokemons} onPokemonClick={handlePokemonClick} />
+      {isLoading ? (
+        <div className="loading">
+          <Lottie.default
+            animationData={Bulbasaur}
+            loop={true}
+            autoplay={true}
+            style={{ height: 300, width: 300 }} // Customize size
+          />
+        </div>
+      ) : (
+        <Pokemons mons={pokemons} onPokemonClick={handlePokemonClick} />
+      )}
     </div>
   );
 }

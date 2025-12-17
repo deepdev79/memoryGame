@@ -4,11 +4,17 @@
   padding: 2rem;
   text-align: center;
 }
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .mons {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  border: 1px solid grey;
   padding: 1%;
 }
 
