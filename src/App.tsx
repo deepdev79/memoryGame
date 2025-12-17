@@ -1,5 +1,5 @@
-import { use, useEffect, useRef, useState } from "react";
-
+import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import "./App.css";
 
 interface FetchPokemon {
@@ -36,15 +36,16 @@ function App() {
     if (prevClick.length === 0) {
       setPrevClick((prev) => [...prev, id]);
       setScore(1);
-      return;
     } else if (prevClick.includes(id)) {
       if (score > bestScore.current) bestScore.current = score;
       setScore(0);
       setPrevClick([]);
       return;
+    } else {
+      setPrevClick((prev) => [...prev, id]);
+      setScore((s) => s + 1);
     }
-    setPrevClick((prev) => [...prev, id]);
-    setScore((s) => s + 1);
+    shufflePokemons();
   }
 
   function shufflePokemons() {
@@ -64,18 +65,27 @@ function App() {
       <p>Score: {score}</p>
       <p>Best score: {bestScore.current}</p>
       <Pokemons mons={pokemons} onPokemonClick={handlePokemonClick} />
-      <button onClick={shufflePokemons}>Click me</button>
     </div>
   );
 }
 
-function Pokemons({ mons, onPokemonClick }) {
+interface PokemonsProps {
+  mons: FetchPokemon[];
+  onPokemonClick: (id: number) => void;
+}
+
+function Pokemons({ mons, onPokemonClick }: PokemonsProps) {
   return (
     <div className="mons">
-      {mons.map((el) => (
-        <div className="box" key={el.id} onClick={() => onPokemonClick(el.id)}>
+      {mons.map((el: FetchPokemon) => (
+        <motion.div
+          layout
+          className="box"
+          key={el.id}
+          onClick={() => onPokemonClick(el.id)}
+        >
           <img src={el.monPic} alt={`Pokemon ${el.id}`} />
-        </div>
+        </motion.div>
       ))}
     </div>
   );
