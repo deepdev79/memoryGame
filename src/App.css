@@ -4,16 +4,42 @@
   padding: 2rem;
   text-align: center;
 }
+body {
+  margin: 0;
+  padding: 0;
+  background-image: url("/pikachu.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+}
 
-.loading {
+h1 {
+  color: white;
+}
+
+.loading,
+.scores,
+.difficulty {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+.scores {
+  gap: 15px;
+}
+
+.scores p {
+  color: white;
+  font-weight: 500;
+}
+
 .mons {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 20px;
   padding: 1%;
 }
@@ -29,8 +55,33 @@
   border: 1px solid black;
   cursor: pointer;
   border-radius: 5%;
+  background-color: rgba(247, 244, 244, 0.479);
+  border: 2px solid rgba(255, 255, 255, 0.3); /* Softer border */
 }
 
 .box:hover {
   border-color: red;
+  transform: scale(1.05);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 3rem;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border: 4px solid #ffcb05; /* Pokémon Yellow */
 }
