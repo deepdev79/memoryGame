@@ -1,4 +1,4 @@
-import { Children, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Lottie from "lottie-react";
 import Bulbasaur from "../public/Bulbasaur.json";
@@ -42,22 +42,31 @@ function App() {
     [limit]
   );
 
+  function quit() {
+    resetGame();
+    setLimit(0);
+    setIsLoading(true);
+  }
   function resetGame() {
     setScore(0);
     setPrevClick([]);
     setModalstatus(false);
   }
   function handlePokemonClick(id: number) {
-    if (prevClick.length === 0) {
-      setPrevClick((prev) => [...prev, id]);
-      setScore(1);
-    } else if (prevClick.includes(id)) {
+    if (prevClick.includes(id)) {
       if (score > bestScore.current) bestScore.current = score;
       setModalstatus(true);
       return;
-    } else {
-      setPrevClick((prev) => [...prev, id]);
-      setScore((s) => s + 1);
+    }
+
+    const nextScore = score + 1;
+    setPrevClick((prev) => [...prev, id]);
+    setScore(nextScore);
+
+    if (nextScore === limit) {
+      if (nextScore > bestScore.current) bestScore.current = nextScore;
+      setModalstatus(true);
+      return;
     }
     shufflePokemons();
   }
@@ -77,7 +86,10 @@ function App() {
     <div className="container">
       {!limit && (
         <DecisionModal>
-          <div className="difficulty">
+          <p style={{ color: "#ffff", fontSize: "1.5rem" }}>
+            Choose Difficulty{" "}
+          </p>
+          <div className="options">
             <button className="btn" onClick={() => setLimit(5)}>
               Easy
             </button>
@@ -92,11 +104,16 @@ function App() {
       )}
       <h1>Memory Game</h1>
       <div className="scores">
-        <p>Score: {score}</p>
-        <p>Best score: {bestScore.current}</p>
+        <p>
+          Score: <span> {score}</span>
+        </p>
+        <p>
+          Best score: <span> {bestScore.current}</span>
+        </p>
       </div>
       {isLoading ? (
         <div className="loading">
+          {/* @ts-ignore */}
           <Lottie.default
             animationData={Bulbasaur}
             loop={true}
@@ -110,9 +127,20 @@ function App() {
       <AnimatePresence>
         {modalstatus && (
           <DecisionModal>
-            <h2>{modalstatus ? "You Win! 🎉" : "Game Over! 💀"}</h2>
-            <p>Final Score: {score}</p>
-            <button onClick={resetGame}>Play Again</button>
+            <h2 style={{ color: "#ffff", fontSize: "1.5rem" }}>
+              {score === limit ? "You Win! 🎉" : "Game Over! 💀"}
+            </h2>
+            <p style={{ color: "#ffff", fontSize: "1.5rem" }}>
+              Final Score: {score}
+            </p>
+            <div className="options">
+              <button className="btn" onClick={resetGame}>
+                Play Again
+              </button>
+              <button className="btn" onClick={quit}>
+                Quit
+              </button>
+            </div>
           </DecisionModal>
         )}
       </AnimatePresence>
@@ -120,7 +148,11 @@ function App() {
   );
 }
 
-function DecisionModal({ children }) {
+interface DecisionModalProp {
+  children: React.ReactNode;
+}
+
+function DecisionModal({ children }: DecisionModalProp) {
   return (
     <motion.div
       className="modal-overlay"
