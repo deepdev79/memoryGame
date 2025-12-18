@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Lottie from "lottie-react";
-import Bulbasaur from "../public/Bulbasaur.json";
+import Bulbasaur from "./assets/Bulbasaur.json";
 import "./App.css";
 
 interface FetchPokemon {
